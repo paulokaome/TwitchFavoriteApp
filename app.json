@@ -1,9 +1,9 @@
 {
-  "name": "stream.data",
-  "displayName": "stream.data",
+  "name": "twitchFavoriteApp",
+  "displayName": "twitchFavoriteApp",
   "expo": {
-    "name": "stream.data",
-    "scheme": "stream.data",
+    "name": "TwitchFavoriteApp",
+    "scheme": "twitchfavoriteapp",
     "slug": "streamData",
     "version": "1.0.0",
     "assetBundlePatterns": [
