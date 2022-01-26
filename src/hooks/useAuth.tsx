@@ -64,21 +64,21 @@ function AuthProvider({ children }: AuthProviderData) {
         `&scope=${SCOPE}` +
         `&force_verify=${FORCE_VERIFY}` +
         `&state=${STATE}`;
-      startAsync({ authUrl }).then((response) => {
-        if (
-          response.type === "success" &&
-          response.params.error !== "access_denied"
-        ) {
-          if (response.params.state !== STATE) {
-            throw new Error("Invalid state value");
-          }
-          api.defaults.headers.authorization = `Bearer ${response.params.access_token}`;
-          setUserToken(response.params.access_token);
-        }
-      });
 
-      const userResponse = await api.get("/users");
-      setUser(userResponse.data.data[0]);
+      const authResponse = await startAsync({ authUrl });
+      if (
+        authResponse.type === "success" &&
+        authResponse.params.error !== "access_denied"
+      ) {
+        if (authResponse.params.state !== STATE) {
+          throw new Error("Invalid state value");
+        }
+        api.defaults.headers.authorization = `Bearer ${authResponse.params.access_token}`;
+        setUserToken(authResponse.params.access_token);
+
+        const userResponse = await api.get("/users");
+        setUser(userResponse.data.data[0]);
+      }
     } catch (error) {
       throw new Error("Invalid state value");
     } finally {
@@ -93,7 +93,6 @@ function AuthProvider({ children }: AuthProviderData) {
         { token: userToken, clientId: CLIENT_ID },
         { revocationEndpoint: twitchEndpoints.revocation }
       );
-      // call revokeAsync with access_token, client_id and twitchEndpoint revocation
     } catch (error) {
     } finally {
       setUser({} as User);
